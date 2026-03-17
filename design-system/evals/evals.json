@@ -1,0 +1,26 @@
+{
+  "skill_name": "design-system",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "saas-dashboard-nextjs-shadcn",
+      "prompt": "I'm building a B2B SaaS dashboard for project management. It's a Next.js app using Tailwind CSS and I'd like to use shadcn/ui components as a base. The app needs to feel professional and trustworthy - it's for enterprise teams managing large projects. Key features include: project overview pages, team member management, task boards, analytics/reports, and settings.",
+      "expected_output": "Agent should establish a design system BEFORE coding features. Output should include: granular design tokens (full color palettes 50-900, typography scale, spacing scale), core components (Button, Card, Input, Table, etc.), domain-specific components (TaskCard, KanbanBoard, StatCard for project management), Tailwind config extensions, shadcn-compatible components, example dashboard page showing components in context, guidelines.md, and accessibility.md with WCAG 2.1 AA guidelines.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "fitness-app-react-styled-components",
+      "prompt": "I need a consumer-facing mobile app (react native web). We're using React with styled-components. The app is a fitness/wellness tracker targeting millennials - should feel energetic, modern, and motivating. Main screens: home dashboard, workout tracker, progress charts, social feed, profile. We need components that work well on mobile first but also scale to desktop. TypeScript preferred.",
+      "expected_output": "Agent should establish a design system BEFORE coding features. Output should include: granular design tokens (energetic color palette, mobile-first typography, spacing scale), core components, domain-specific components (WorkoutCard, ExerciseList, ProgressChart, ActivityFeed), styled-components theme provider, mobile-optimized components, example screen (e.g., home dashboard), guidelines.md, and accessibility.md.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "ecommerce-vue-tailwind-luxury",
+      "prompt": "Building an e-commerce storefront for a luxury skincare brand. Using Vue 3 with Tailwind CSS. The design should feel premium, minimalist, and elegant - think high-end beauty brands. Key pages: homepage with hero sections, product listing, product detail page, shopping cart, checkout flow, account dashboard. Need components that emphasize product imagery and create a seamless shopping experience. Also need a dark mode option.",
+      "expected_output": "Agent should establish a design system BEFORE coding features. Output should include: granular design tokens (premium/minimalist color palette, elegant typography, dark mode tokens), core components, domain-specific e-commerce components (ProductCard, ProductGallery, ShoppingCart, CheckoutStep, ReviewCard), Vue components with Tailwind, example page (e.g., product detail), guidelines.md, and accessibility.md.",
+      "files": []
+    }
+  ]
+}
