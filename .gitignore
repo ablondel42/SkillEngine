@@ -31,3 +31,6 @@ test-results.json
 grading.json
 comparison.json
 manifest.json
+
+# Project Enhancements
+repo-health-coordinator.md
