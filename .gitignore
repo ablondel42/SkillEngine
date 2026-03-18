@@ -1,0 +1,33 @@
+# Test output directories
+design-system/eval-outputs/
+skill-creator/eval-outputs/
+*-workspace/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python virtual environments
+venv/
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+*.log
+test-results.json
+grading.json
+comparison.json
+manifest.json

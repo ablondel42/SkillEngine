@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: Build comprehensive design systems with consistent components, tokens, and patterns for web applications. Use this skill when the user wants to establish or improve a design system for their application - including defining design tokens (colors, typography, spacing), component specifications (buttons, cards, inputs, etc.), and implementation guidelines. Trigger when users mention design systems, component libraries, UI consistency, design patterns, or want to create reusable UI building blocks. Even casual mentions like 'make my app look consistent' or 'create a shared style guide' should trigger this skill.
+description: Build comprehensive design systems with consistent components, tokens, and patterns for web applications. Use when users want to establish or improve a design system - including design tokens (colors, typography, spacing), component specs (buttons, cards, inputs), and implementation guidelines. Trigger on design systems, component libraries, UI consistency, design patterns, reusable UI building blocks, or phrases like 'make my app look consistent' or 'create a shared style guide'.
 ---
 
 # Design System Creation
@@ -35,26 +35,23 @@ Before generating ANY code, you MUST gather context by asking the user the follo
 
 **Required Questions (Ask ALL of these, every time):**
 
-1. **App concept**: What does the application do? What problem does it solve? What are the core features?
+Keep the interview concise. Ask these 5 questions in a single message:
 
-2. **Target users**: Who will use this app? (e.g., developers, consumers, enterprise users, internal teams)
+1. **App concept & users**: What does the application do and who will use it? (e.g., "B2B SaaS dashboard for enterprise teams")
 
-3. **Tone/mood**: What feeling should the design convey? (e.g., professional, playful, minimalist, bold, trustworthy, innovative, luxury, energetic)
+2. **Tone/mood**: What feeling should the design convey? (e.g., professional, energetic, premium, minimalist)
 
-4. **Tech stack** (CRITICAL — drives all implementation decisions):
-   - Frontend framework: React, Next.js, Vue, Svelte, Angular, or vanilla
-   - Styling approach: Tailwind CSS, CSS-in-JS (styled-components, Emotion), SCSS, vanilla CSS, CSS Modules
-   - Component libraries: shadcn/ui, Radix UI, Headless UI, MUI, Chakra, or from scratch
-   - TypeScript or JavaScript?
-   - Any existing libraries, templates, or constraints?
+3. **Tech stack** (CRITICAL): What frontend framework and styling approach? (e.g., "Next.js + Tailwind + TypeScript" or "Vue 3 + SCSS")
 
-5. **Key screens/features**: What are the main pages or features? (e.g., dashboard, product listing, checkout flow, settings)
+4. **Key screens/features**: What are the main pages or features? (e.g., "dashboard, product pages, checkout flow")
 
-6. **Accessibility requirements**: Any specific WCAG level to target? (default: WCAG 2.1 AA)
+5. **Dark mode**: Should the design system support dark mode? (default: yes)
 
-7. **Dark mode**: Should the design system support dark mode?
+**Accessibility defaults to WCAG 2.1 AA unless specified otherwise.**
 
-**Important:** Wait for the user's complete response before proceeding to Step 2. If the user provides partial answers, politely ask for the remaining information. Do NOT generate any design tokens or components until you have answers to all 7 questions.
+**Important:** Wait for the user's complete response before proceeding to Step 2. If the user provides partial answers, politely ask for the remaining information. Do NOT generate any design tokens or components until you have answers to all 5 questions.
+
+**EXCEPTION for Automated/Test Contexts:** If this is an automated test or the task explicitly says to skip the interview and use defaults, proceed with reasonable defaults based on the task description. Document your assumptions clearly and proceed to Step 2.
 
 ### Step 2: Define Design Tokens with Granularity
 
@@ -106,6 +103,8 @@ Based on the user's input, create a comprehensive, granular token system. Refere
 
 Design a comprehensive component library **tailored to the app's domain**. Reference `references/component-patterns.md` for patterns.
 
+**CRITICAL REQUIREMENT:** Create **5-10 domain-specific components** minimum. This is what differentiates a professional design system from a generic UI kit.
+
 For each component, specify:
 
 **Structure:** Semantic HTML/markup
@@ -114,6 +113,13 @@ For each component, specify:
 **Sizes:** sm, md, lg options
 **Props/API:** What configuration the component accepts
 **Accessibility:** ARIA attributes, keyboard navigation
+
+**IMPORTANT:** Domain components MUST use the design tokens and core components you just created. For example:
+- A `ProductCard` should use your `Card` core component + your color tokens + your typography tokens
+- A `StatCard` should use your `Card` core component + your spacing tokens + your shadow tokens
+- A `WorkoutCard` should use your `Card` core component + your color tokens for intensity indicators
+
+This creates a cohesive system where domain components are built ON TOP of your design system library, not separate from it.
 
 **Core Component Categories (Always Include):**
 
@@ -132,18 +138,27 @@ For each component, specify:
 
 Ask yourself: "What does this app DO?" and create components for those specific use cases.
 
-| Domain | Domain-Specific Components |
-|--------|---------------------------|
-| **Dashboard/Analytics** | StatCard, KPI, Chart, Graph, DataTable, FilterBar, DateRangePicker |
-| **Project Management** | KanbanBoard, TaskCard, SprintBoard, GanttChart, TeamMemberCard |
-| **E-commerce** | ProductCard, ProductGallery, ShoppingCart, CheckoutStep, ReviewCard, PriceTag |
-| **Social/Media** | PostCard, CommentThread, LikeButton, ShareButton, UserProfile, FeedItem |
-| **SaaS/B2B** | PricingCard, FeatureTable, TestimonialCard, IntegrationCard, OnboardingStep |
-| **Healthcare** | PatientCard, AppointmentSlot, MedicalRecord, PrescriptionList |
-| **Finance** | TransactionRow, AccountSummary, BudgetCard, InvestmentChart |
-| **Education** | CourseCard, LessonList, QuizQuestion, ProgressTracker, CertificateBadge |
+**REQUIRED: Create 5-10 domain components minimum.** More complex domains need more components.
+
+| Domain | Domain-Specific Components (create ALL that apply) |
+|--------|---------------------------------------------------|
+| **Dashboard/Analytics** | StatCard, KPI, Chart, Graph, DataTable, FilterBar, DateRangePicker, MetricTile, TrendIndicator, GaugeChart |
+| **Project Management** | KanbanBoard, TaskCard, SprintBoard, GanttChart, TeamMemberCard, TaskList, SubtaskList, PriorityBadge, DueDateIndicator |
+| **E-commerce** | ProductCard, ProductGallery, ShoppingCart, CheckoutStep, ReviewCard, PriceTag, ProductFilters, StockIndicator, SizeSelector, WishlistButton |
+| **Social/Media** | PostCard, CommentThread, LikeButton, ShareButton, UserProfile, FeedItem, FollowButton, NotificationBadge, StoryViewer, MessagePreview |
+| **SaaS/B2B** | PricingCard, FeatureTable, TestimonialCard, IntegrationCard, OnboardingStep, UsageMeter, ApiKeyDisplay, TeamInvite, AuditLog, BillingTable |
+| **Healthcare** | PatientCard, AppointmentSlot, MedicalRecord, PrescriptionList, VitalSigns, SymptomChecker, LabResults, InsuranceCard, CareTeam |
+| **Finance** | TransactionRow, AccountSummary, BudgetCard, InvestmentChart, CreditScore, GoalTracker, AlertSettings, FraudAlert, BillReminder |
+| **Education** | CourseCard, LessonList, QuizQuestion, ProgressTracker, CertificateBadge, AssignmentCard, GradeDisplay, DiscussionPost, VideoPlayer |
+| **Fitness/Wellness** | WorkoutCard, ExerciseList, ProgressChart, ActivityFeed, RepCounter, SetTracker, CalorieDisplay, HeartRateZone, AchievementBadge |
 
 **Do NOT just list generic components.** If the user says "it's a fitness app," create WorkoutCard, ExerciseList, RepCounter, ProgressChart. If it's "a recipe app," create RecipeCard, IngredientList, StepByStep, NutritionLabel.
+
+**Each domain component should:**
+1. **Use core components** (Card, Button, Badge, etc.) as building blocks
+2. **Apply design tokens** (colors, typography, spacing, shadows)
+3. **Include domain-specific logic** (e.g., ProductCard shows price, add-to-cart; WorkoutCard shows exercises, sets, reps)
+4. **Be production-ready** with proper TypeScript types, ARIA attributes, and responsive design
 
 ### Step 4: Generate Implementation
 

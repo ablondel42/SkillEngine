@@ -5,97 +5,130 @@ understand the user's needs before writing any code.
 
 ---
 
-## The 7 Essential Questions
+## The 5 Essential Questions
 
-Ask these in order. If answers are vague, offer suggestions based on their
-domain.
+Ask these in a SINGLE message. Keep it concise.
 
-### 1. App Concept
+### 1. App Concept & Users
+**Ask:** What does the application do and who will use it?
 
-**Ask:** What does the application do? What problem does it solve?
+**Examples:**
+- "B2B SaaS dashboard for enterprise teams managing projects"
+- "Consumer fitness app targeting millennials"
+- "E-commerce storefront for luxury skincare brand"
 
-**Listen for:** Clear problem statement, specific user actions, domain vocabulary
-
-**If vague, suggest:**
-> "For [domain] apps, typical features include: [list 3-4]. Which match your vision?"
-
----
-
-### 2. Target Users
-
-**Ask:** Who will use this app?
-
-**Listen for:** Technical level, primary device, usage context
-
-**If vague, suggest:**
-> "For [domain], I'd design for: moderate tech skills, mixed desktop/mobile,
-> short daily sessions. Does this match?"
+**Listen for:** Domain, user type, core purpose
 
 ---
 
-### 3. Tone & Mood
-
-**Ask:** What feeling should the design convey? (3 adjectives)
+### 2. Tone/Mood
+**Ask:** What feeling should the design convey?
 
 **Options to offer:**
 - **Professional** - Trustworthy, reliable, serious
-- **Modern** - Clean, innovative, forward
+- **Energetic** - Modern, motivating, bold
+- **Premium** - Elegant, minimalist, luxury
 - **Friendly** - Warm, approachable, playful
-- **Bold** - Confident, striking, memorable
+
+**Listen for:** 2-3 adjectives describing the desired feel
 
 ---
 
-### 4. Tech Stack (Critical)
+### 3. Tech Stack (CRITICAL)
+**Ask:** What frontend framework and styling approach?
 
-**Ask:** Framework, styling approach, component libraries, TypeScript?
+**Examples:**
+- "Next.js + Tailwind + TypeScript"
+- "Vue 3 + SCSS"
+- "React + styled-components"
 
-**If unsure, recommend:**
-- **Startups:** Next.js + Tailwind + shadcn/ui + TypeScript
-- **Enterprise:** React + CSS Modules + Radix UI + TypeScript
-- **Vue shops:** Vue 3 + SCSS + TypeScript
+**Listen for:** Framework, styling approach, TypeScript vs JavaScript
 
 ---
 
-### 5. Key Screens
-
+### 4. Key Screens/Features
 **Ask:** What are the main pages or features?
 
-**If vague, suggest common screens for their domain:**
-- **Dashboard:** KPI cards, charts, data tables, filters
-- **E-commerce:** Product list, detail, cart, checkout
-- **SaaS:** Landing, pricing, onboarding, dashboard
+**Examples:**
+- "Dashboard, product pages, checkout flow"
+- "Home dashboard, workout tracker, progress charts, social feed"
+- "Homepage, product listing, cart, account dashboard"
+
+**Listen for:** 3-5 main screens or features
 
 ---
 
-### 6. Accessibility
-
-**Ask:** Any specific WCAG level? (Default: 2.1 AA)
-
-**If unsure:**
-> "WCAG 2.1 AA is standard: 4.5:1 contrast, keyboard navigation, screen
-> reader support. Should we target this?"
-
----
-
-### 7. Dark Mode
-
+### 5. Dark Mode
 **Ask:** Should the design system support dark mode?
 
-**Guidance:**
-- **Developer tools:** Essential
-- **Media/entertainment:** Important
-- **Enterprise/B2B:** Optional
-- **Healthcare:** Often disabled for clinical accuracy
+**Default:** Yes (unless specified otherwise)
+
+---
+
+## Accessibility
+
+**Default:** WCAG 2.1 AA
+
+Only ask if user has specific requirements beyond this.
 
 ---
 
 ## Before You Start Coding
 
 Make sure you:
-- Understand the domain well enough to name 5-10 domain components
-- Know which screens to build as examples
-- Can describe the tone in 2-3 words
-- Have crystal-clear tech stack details
+- [ ] Understand the domain well enough to name 5-10 domain components
+- [ ] Know which screens to build as examples
+- [ ] Can describe the tone in 2-3 words
+- [ ] Have crystal-clear tech stack details
 
 **If anything is unclear, ask follow-up questions.** It's better to clarify
 now than to rebuild later.
+
+---
+
+## Example Interview Message
+
+```
+I'll help you create a comprehensive design system! Before I start, I need 
+to understand your requirements. Please answer these 5 questions:
+
+1. **App concept & users**: What does the application do and who will use it?
+
+2. **Tone/mood**: What feeling should the design convey? (e.g., professional, 
+   energetic, premium, minimalist)
+
+3. **Tech stack**: What frontend framework and styling approach? 
+   (e.g., "Next.js + Tailwind + TypeScript")
+
+4. **Key screens/features**: What are the main pages or features?
+
+5. **Dark mode**: Should the design system support dark mode?
+
+(Accessibility defaults to WCAG 2.1 AA)
+```
+
+---
+
+## Tips
+
+1. **Ask all 5 questions in ONE message** - Don't drag out the interview
+2. **Keep it conversational** - Use natural language, not a rigid form
+3. **Provide examples** - Help users understand what you're asking
+4. **Wait for complete answers** - Don't proceed until you have all 5
+5. **Document assumptions** - If user is vague, note your interpretation
+
+---
+
+## Common Follow-ups
+
+**If user is vague on tech stack:**
+> "Got it. To clarify: are you using React, Next.js, Vue, or something else? 
+> And for styling: Tailwind, CSS-in-JS, SCSS, or vanilla CSS?"
+
+**If user is vague on tone:**
+> "Should the design feel more professional and trustworthy, or energetic 
+> and modern? Or perhaps premium and minimalist?"
+
+**If user doesn't mention dark mode:**
+> "Should I include dark mode support? (This is usually recommended for 
+> modern apps)"

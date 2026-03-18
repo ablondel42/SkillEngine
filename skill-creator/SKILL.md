@@ -332,6 +332,17 @@ This is optional, requires subagents, and most users won't need it. The human re
 
 ## Description Optimization
 
+**Note for Qwen Code users:** The `run_loop.py` script requires the `claude` CLI tool (`claude -p`) which is only available in Claude Code. If you're using Qwen Code, use the static trigger readiness analysis instead:
+
+```bash
+# Qwen-compatible trigger analysis (no CLI required)
+python3 scripts/trigger_readiness.py <skill-path>
+```
+
+This analyzes the skill description for trigger optimization based on Cycle 5 research findings. For full trigger testing with execution, you'll need to manually test triggers in a Qwen session.
+
+---
+
 The description field in SKILL.md frontmatter is the primary mechanism that determines whether Claude invokes a skill. After creating or improving a skill, offer to optimize the description for better triggering accuracy.
 
 ### Step 1: Generate trigger eval queries
@@ -417,6 +428,47 @@ After packaging, direct the user to the resulting `.skill` file path so they can
 
 ---
 
+## Qwen Code-Specific Instructions
+
+In Qwen Code, the core workflow is similar but some mechanics change due to different tool availability:
+
+**Running test cases**: You have subagents via the Task tool. You can spawn multiple subagents in the same message for parallel execution. For each test case, spawn a subagent with the skill path and task prompt. Save outputs to iteration directories.
+
+**Static testing (NEW)**: Qwen Code includes a static test suite that doesn't require subagent execution:
+
+```bash
+# Run all static tests (no subagents, no API calls)
+python3 scripts/static_test_suite.py <skill-path>
+
+# Individual static tests
+python3 scripts/quick_validate.py <skill-path>      # Syntax validation
+python3 scripts/static_analysis.py <skill-path>     # Quality checks
+python3 scripts/trigger_readiness.py <skill-path>   # Trigger optimization
+python3 scripts/review_evals.py <skill-path>        # Eval definitions
+python3 scripts/check_structure.py <skill-path>     # File structure
+```
+
+Use static tests for:
+- Quick iteration during development
+- Pre-commit checks
+- When quota is limited
+- CI/CD pipelines
+
+**Reviewing results**: Use `eval-viewer/generate_review.py` with `--static <output_path>` to generate a standalone HTML file that can be opened in a browser.
+
+**Benchmarking**: The `aggregate_benchmark.py` script works in Qwen Code. Run it after grading to produce `benchmark.json`.
+
+**Description optimization**: The `run_loop.py` script requires `claude -p` which is not available in Qwen Code. Use `trigger_readiness.py` for static analysis instead, or manually test triggers in a Qwen session.
+
+**Packaging**: The `package_skill.py` script works anywhere with Python and a filesystem.
+
+**Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. In this case:
+- **Preserve the original name.** Note the skill's directory name and `name` frontmatter field -- use them unchanged. E.g., if the installed skill is `research-helper`, output `research-helper.skill` (not `research-helper-v2`).
+- **Copy to a writeable location before editing.** The installed skill path may be read-only. Copy to `/tmp/skill-name/`, edit there, and package from the copy.
+- **If packaging manually, stage in `/tmp/` first**, then copy to the output directory -- direct writes may fail due to permissions.
+
+---
+
 ## Claude.ai-specific instructions
 
 In Claude.ai, the core workflow is the same (draft → test → review → improve → repeat), but because Claude.ai doesn't have subagents, some mechanics change. Here's what to adapt:
@@ -463,9 +515,17 @@ The agents/ directory contains instructions for specialized subagents. Read them
 - `agents/grader.md` — How to evaluate assertions against outputs
 - `agents/comparator.md` — How to do blind A/B comparison between two outputs
 - `agents/analyzer.md` — How to analyze why one version beat another
+- `agents/test-coordinator.md` — How to orchestrate the testing workflow (Qwen-compatible)
 
 The references/ directory has additional documentation:
 - `references/schemas.md` — JSON structures for evals.json, grading.json, etc.
+
+Additional Qwen-compatible documentation:
+- `QWEN-COMPATIBLE.md` — Full Qwen Code compatibility guide
+- `FAST-TESTING.md` — Quick testing workflow (3-5 min)
+- `QUICK-TRIGGER-TEST.md` — Trigger testing templates
+- `NO-SUBAGENT-TESTS.md` — Static testing without subagents
+- `PARALLEL-EXECUTION.md` — How to run subagents in parallel
 
 ---
 

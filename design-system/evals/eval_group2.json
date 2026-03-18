@@ -1,0 +1,31 @@
+{
+  "skill_name": "design-system",
+  "eval_group": "2_of_3",
+  "eval_name": "fitness-app-react-styled-components",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "fitness-app-react-styled-components",
+      "prompt": "I need a consumer-facing mobile app (react native web). We're using React with styled-components. The app is a fitness/wellness tracker targeting millennials - should feel energetic, modern, and motivating. Main screens: home dashboard, workout tracker, progress charts, social feed, profile. We need components that work well on mobile first but also scale to desktop. TypeScript preferred.",
+      "expected_output": "Agent should establish a design system BEFORE coding features. Output should include: granular design tokens (energetic color palette, mobile-first typography, spacing scale), core components, domain-specific components (WorkoutCard, ExerciseList, ProgressChart, ActivityFeed), styled-components theme provider, mobile-optimized components, example screen (e.g., home dashboard), guidelines.md, and accessibility.md.",
+      "expectations": [
+        "Design tokens include energetic color palette (full 50-900 shades)",
+        "Design tokens include mobile-first typography scale",
+        "Design tokens include spacing scale",
+        "Design tokens include touch-friendly sizing (44px minimum touch targets)",
+        "Core components defined: Button (with mobile-optimized sizes)",
+        "Core components defined: Card",
+        "Core components defined: Input",
+        "Domain components created: WorkoutCard or ExerciseCard",
+        "Domain components created: ProgressChart or ActivityChart",
+        "Domain components created: ActivityFeed or SocialFeed component",
+        "Bottom navigation or mobile navigation component created",
+        "Example screen created (home dashboard or workout tracker)",
+        "styled-components theme provider or equivalent created",
+        "guidelines.md documentation created",
+        "accessibility.md created with mobile accessibility guidelines"
+      ],
+      "files": []
+    }
+  ]
+}

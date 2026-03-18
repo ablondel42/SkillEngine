@@ -1,0 +1,45 @@
+{
+  "skill_name": "design-system",
+  "test_date": "2026-03-17",
+  "test_type": "comprehensive",
+  "group": "2_of_5",
+  "group_name": "Direct Matches and Related Terms",
+  "tests": [
+    {
+      "id": 7,
+      "query": "I need a UI kit with consistent components for my e-commerce site",
+      "should_trigger": true,
+      "category": "direct_match"
+    },
+    {
+      "id": 8,
+      "query": "Build a style guide for my startup's web application",
+      "should_trigger": true,
+      "category": "related_terms"
+    },
+    {
+      "id": 9,
+      "query": "I need to define design tokens for colors and typography",
+      "should_trigger": true,
+      "category": "related_terms"
+    },
+    {
+      "id": 10,
+      "query": "Create reusable UI building blocks for my team",
+      "should_trigger": true,
+      "category": "related_terms"
+    },
+    {
+      "id": 11,
+      "query": "Create a shared style guide for my components",
+      "should_trigger": true,
+      "category": "direct_match"
+    },
+    {
+      "id": 12,
+      "query": "I want to establish UI consistency across my application",
+      "should_trigger": true,
+      "category": "related_terms"
+    }
+  ]
+}

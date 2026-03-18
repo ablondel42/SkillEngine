@@ -1,0 +1,51 @@
+{
+  "skill_name": "design-system",
+  "test_date": "2026-03-17",
+  "test_type": "comprehensive",
+  "group": "3_of_5",
+  "group_name": "Vague Requests and Component-Specific",
+  "tests": [
+    {
+      "id": 13,
+      "query": "Make my app look more professional and consistent",
+      "should_trigger": true,
+      "category": "vague_request"
+    },
+    {
+      "id": 14,
+      "query": "I'm building a web app and need it to look polished",
+      "should_trigger": true,
+      "category": "vague_request"
+    },
+    {
+      "id": 15,
+      "query": "Set up the UI for my new SaaS dashboard",
+      "should_trigger": true,
+      "category": "vague_request"
+    },
+    {
+      "id": 16,
+      "query": "I need buttons, cards, and inputs for my application",
+      "should_trigger": true,
+      "category": "component_specific"
+    },
+    {
+      "id": 17,
+      "query": "Build a design system with tokens and components",
+      "should_trigger": true,
+      "category": "direct_match"
+    },
+    {
+      "id": 18,
+      "query": "I need a mobile-first design system for my React Native app",
+      "should_trigger": true,
+      "category": "direct_match"
+    },
+    {
+      "id": 19,
+      "query": "Create accessible form components with proper ARIA",
+      "should_trigger": true,
+      "category": "component_specific"
+    }
+  ]
+}
