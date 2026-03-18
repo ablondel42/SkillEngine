@@ -34,8 +34,8 @@ tailored to their stack and domain.
 
 ## Workflow
 
-1. **Interview** — Ask 7 required questions (app concept, users, tone, stack,
-   screens, accessibility, dark mode)
+1. **Interview** — Ask 5 required questions (app concept & users, tone, stack,
+   screens, dark mode)
 2. **Tokens** — Create granular design tokens (colors, typography, spacing,
    borders, shadows, motion)
 3. **Components** — Design core + domain-specific components
@@ -54,7 +54,10 @@ design-system/
 ├── SKILL.md                 # Skill definition and workflow
 ├── README.md                # This file
 ├── evals/
-│   └── evals.json           # Test cases for validation
+│   ├── eval_group1.json     # Test cases: SaaS Dashboard (Next.js + Tailwind)
+│   ├── eval_group2.json     # Test cases: Fitness App (React + styled-components)
+│   ├── eval_group3.json     # Test cases: E-commerce (Vue 3 + Tailwind)
+│   └── trigger_tests_group*.json  # Trigger testing evals
 ├── references/
 │   ├── tokens.md            # Token reference (colors, typography, spacing)
 │   ├── component-patterns.md # Component patterns and specs
@@ -69,7 +72,7 @@ design-system/
 │   ├── check_consistency.py # CSS/token compliance checker
 │   ├── generate_css.py      # CSS variable generator
 │   └── README.md            # Script documentation
-└── assets/                  # Example outputs (coming soon)
+└── assets/                  # Example outputs (placeholder)
 ```
 
 ---
@@ -78,7 +81,7 @@ design-system/
 
 **Interview First (NON-NEGOTIABLE)**
 
-Always complete the full interview before writing any code. Ask all 7 required
+Always complete the full interview before writing any code. Ask all 5 required
 questions and wait for complete answers.
 
 **Design System First**
@@ -111,7 +114,7 @@ Dedicated documentation, not inline notes. WCAG 2.1 AA compliance.
 
 Before considering the task complete, ensure you've delivered:
 
-- [ ] **Interview completed**: All 7 required questions answered by the user
+- [ ] **Interview completed**: All 5 required questions answered by the user
 - [ ] **Granular tokens**: Full color palettes (50-900), typography scale,
       spacing scale, borders, shadows, motion
 - [ ] **Core components**: Actions, Inputs, Layout, Cards, Navigation,
@@ -152,17 +155,24 @@ Before considering the task complete, ensure you've delivered:
 | `check_consistency.py` | Validate CSS/SCSS against design tokens |
 | `generate_css.py` | Generate CSS custom properties from tokens.json |
 
-See `scripts/README.md` for usage.
+**Usage:**
+```bash
+# Check CSS consistency
+python3 scripts/check_consistency.py tokens.json src/**/*.css
+
+# Generate CSS from tokens
+python3 scripts/generate_css.py tokens.json -o styles.css
+```
 
 ---
 
 ## Evaluation
 
-Test cases are defined in `evals/evals.json`:
+Test cases are split into groups for sequential execution:
 
-1. **SaaS Dashboard** — Next.js + Tailwind + shadcn/ui
-2. **Fitness App** — React + styled-components (mobile-first)
-3. **E-commerce** — Vue 3 + Tailwind (luxury/minimalist)
+1. **SaaS Dashboard** — Next.js + Tailwind + shadcn/ui (`eval_group1.json`)
+2. **Fitness App** — React + styled-components (`eval_group2.json`)
+3. **E-commerce** — Vue 3 + Tailwind (`eval_group3.json`)
 
 Each eval tests the skill's ability to:
 

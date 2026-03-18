@@ -67,8 +67,8 @@ def check_structure(skill_path: Path) -> dict:
                 count = len(data.get("evals", []))
                 total_evals += count
                 valid_files += 1
-            except:
-                pass
+            except (json.JSONDecodeError, OSError) as e:
+                print(f"Warning: Failed to parse {ef}: {e}", file=sys.stderr)
         
         if valid_files > 0 and total_evals >= 1:
             results["score"] += 40

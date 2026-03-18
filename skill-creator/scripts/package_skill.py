@@ -14,14 +14,15 @@ import fnmatch
 import sys
 import zipfile
 from pathlib import Path
-from scripts.quick_validate import validate_skill
 
-# Patterns to exclude when packaging skills.
-EXCLUDE_DIRS = {"__pycache__", "node_modules"}
-EXCLUDE_GLOBS = {"*.pyc"}
-EXCLUDE_FILES = {".DS_Store"}
-# Directories excluded only at the skill root (not when nested deeper).
-ROOT_EXCLUDE_DIRS = {"evals"}
+from scripts.quick_validate import validate_skill
+from scripts.utils import (
+    EXCLUDE_DIRS,
+    EXCLUDE_FILES,
+    EXCLUDE_GLOBS,
+    ROOT_EXCLUDE_DIRS,
+    SKILL_MD_FILENAME,
+)
 
 
 def should_exclude(rel_path: Path) -> bool:
@@ -62,9 +63,9 @@ def package_skill(skill_path, output_dir=None):
         return None
 
     # Validate SKILL.md exists
-    skill_md = skill_path / "SKILL.md"
+    skill_md = skill_path / SKILL_MD_FILENAME
     if not skill_md.exists():
-        print(f"❌ Error: SKILL.md not found in {skill_path}")
+        print(f"❌ Error: {SKILL_MD_FILENAME} not found in {skill_path}")
         return None
 
     # Run validation before packaging
@@ -103,7 +104,7 @@ def package_skill(skill_path, output_dir=None):
         print(f"\n✅ Successfully packaged skill to: {skill_filename}")
         return skill_filename
 
-    except Exception as e:
+    except (zipfile.BadZipFile, PermissionError, OSError) as e:
         print(f"❌ Error creating .skill file: {e}")
         return None
 

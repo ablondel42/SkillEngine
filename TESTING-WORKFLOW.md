@@ -1,8 +1,8 @@
 # Skill Testing Workflow (Qwen-Compatible)
 
-**Last Updated:** 2026-03-18  
-**Status:** Production Ready  
-**Test Coverage:** 29 trigger tests + 5 static analyses + 3 comparison tests
+**Last Updated:** 2026-03-18
+**Status:** Production Ready
+**Test Coverage:** 16 trigger tests + 3 comparison tests
 
 ---
 
@@ -11,11 +11,10 @@
 The testing workflow validates skills across multiple dimensions using Qwen's
 Task tool. No external CLI authentication required.
 
-**Three Test Suites:**
+**Two Test Suites:**
 
 | Suite | Scripts | Subagents | Use Case |
 |-------|---------|-----------|----------|
-| **Static Tests** | `static_test_suite.py` | 0 | Quick validation, CI/CD, pre-commit |
 | **Trigger Tests** | Manual (Task tool) | Yes | Verify skill triggering behavior |
 | **Comparison Tests** | `run_comparison.py` + Task tool | Yes | **PRIMARY: Measure skill added value** |
 
@@ -35,8 +34,7 @@ Task tool. No external CLI authentication required.
 **A skill that works but doesn't improve over baseline provides no value.**
 
 Therefore:
-- ✅ Static tests: Validate skill structure
-- ✅ Trigger tests: Validate skill triggering  
+- ✅ Trigger tests: Validate skill triggering
 - ✅ **Comparison tests: Validate skill VALUE (PRIMARY METRIC)**
 - ❌ Execution-only tests: Removed (meaningless without comparison)
 
@@ -44,57 +42,35 @@ Therefore:
 
 ## Quick Start
 
-### Run All Static Tests (Recommended for Development)
+### Run Trigger Tests
 
 ```bash
-# Run all 5 static tests (no subagents, < 1 second)
-python3 skill-creator/scripts/static_test_suite.py <skill-path>
-
-# Example
-python3 skill-creator/scripts/static_test_suite.py design-system
+# Spawn Task subagents for each of the 16 trigger tests
+# See design-system/evals/trigger_tests.json for all test cases
 ```
-
-**Tests Included:**
-1. Quick Validation (syntax)
-2. Static Analysis (quality)
-3. Trigger Readiness (optimization)
-4. Eval Definitions (structure)
-5. File Structure (organization)
 
 ---
 
 ## Test Types
 
-### Static Tests (No Subagents)
-
-| Test | Script | Time | What It Checks |
-|------|--------|------|----------------|
-| **Quick Validation** | `quick_validate.py` | < 1s | Syntax, frontmatter, naming |
-| **Static Analysis** | `static_analysis.py` | < 1s | Workflow, error handling, evals |
-| **Trigger Readiness** | `trigger_readiness.py` | < 1s | Description optimization |
-| **Eval Review** | `review_evals.py` | < 1s | Eval structure, testability |
-| **File Structure** | `check_structure.py` | < 1s | Required files/directories |
-
-**Run All:** `python3 scripts/static_test_suite.py <skill-path>`
-
----
-
 ### Trigger Tests (With Subagents)
 
-**Comprehensive Suite:** 29 tests across 5 groups
+**Curated Suite:** 16 tests in a single batch (45% reduction from 29)
 
-| Group | Tests | Category | File |
-|-------|-------|----------|------|
-| **Group 1** | 6 | Explicit Commands + Direct Match | `trigger_tests_group1.json` |
-| **Group 2** | 6 | Direct Matches + Related Terms | `trigger_tests_group2.json` |
-| **Group 3** | 7 | Vague Requests + Component-Specific | `trigger_tests_group3.json` |
-| **Group 4** | 6 | Negative Cases (Part 1) | `trigger_tests_group4.json` |
-| **Group 5** | 4 | Negative Cases (Part 2) | `trigger_tests_group5.json` |
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Explicit Commands | 2 | Slash (`/design-system`) and colon (`skill:`) syntax |
+| Direct Matches | 3 | "Design system", "component library", "UI kit" |
+| Related Terms | 2 | "Design tokens", "UI building blocks" |
+| Vague Requests | 2 | Implied design needs with varying specificity |
+| Component-Specific | 2 | Basic components + accessibility-focused |
+| Negative Cases | 5 | Unrelated domains: file, script, DB, infra, ML |
+| **Total** | **16** | **Essential coverage without redundancy** |
 
-**Run Individual Group:**
+**Run Trigger Tests:**
 ```bash
-# Spawn Task subagents for each test in the group
-# See design-system/evals/trigger_tests_groupN.json for test cases
+# Spawn Task subagents for each test
+# See design-system/evals/trigger_tests.json for all 16 test cases
 ```
 
 ---
@@ -117,21 +93,22 @@ For each eval, run TWO executions:
 
 Then compare both outputs blindly to determine which is better.
 
-**Files:**
-- `design-system/evals/eval_group1.json` - SaaS Dashboard
-- `design-system/evals/eval_group2.json` - Fitness App
-- `design-system/evals/eval_group3.json` - E-commerce
+**File:** `design-system/evals/evals.json` - All 3 evals in a single batch
+
+| Eval | Domain | Stack |
+|------|--------|-------|
+| **saas-dashboard-nextjs-shadcn** | B2B SaaS | Next.js, Tailwind, shadcn/ui |
+| **fitness-app-react-styled-components** | Consumer Mobile | React, styled-components |
+| **ecommerce-vue-tailwind-luxury** | E-commerce | Vue 3, Tailwind, luxury |
 
 **How to Run:**
 
 ```bash
-# Run comparison for all 3 evals
+# Run comparison for all 3 evals in a single batch
 python3 skill-creator/scripts/run_comparison.py \
-  --eval-set design-system/evals/eval_group1.json \
+  --eval-set design-system/evals/evals.json \
   --skill-path design-system \
-  --output-dir design-system/eval-outputs/comparison-group1
-
-# Repeat for group2 and group3
+  --output-dir design-system/eval-outputs/comparison
 ```
 
 **What Happens:**
@@ -193,12 +170,12 @@ python3 skill-creator/scripts/run_comparison.py \
 
 | Situation | Recommended Tests |
 |-----------|-------------------|
-| **During development** | Static tests only (`static_test_suite.py`) |
-| **Pre-commit** | Static tests only |
-| **Before release** | Static + Trigger + **ALL 3 Comparison tests** |
-| **Production validation** | Full suite (static + trigger + all 3 comparison tests) |
-| **CI/CD pipeline** | Static tests only |
-| **Quota limited** | Static tests only |
+| **During development** | Trigger tests (subset if needed) |
+| **Pre-commit** | Trigger tests (critical paths only) |
+| **Before release** | **ALL** trigger tests + **ALL 3 comparison tests** |
+| **Production validation** | Full suite (trigger + all 3 comparison tests) |
+| **CI/CD pipeline** | Trigger tests (subset) |
+| **Quota limited** | Trigger tests only (16 tests) |
 | **Demonstrating skill value** | **Comparison tests (REQUIRED)** |
 
 ---
@@ -207,12 +184,6 @@ python3 skill-creator/scripts/run_comparison.py \
 
 | Script | Status | Notes |
 |--------|--------|-------|
-| `static_test_suite.py` | ✅ Production Ready | Run all 5 static tests |
-| `quick_validate.py` | ✅ Production Ready | Syntax validation |
-| `static_analysis.py` | ✅ Production Ready | Quality analysis |
-| `trigger_readiness.py` | ✅ Production Ready | Trigger optimization |
-| `review_evals.py` | ✅ Production Ready | Eval definitions |
-| `check_structure.py` | ✅ Production Ready | File structure |
 | `run_comparison.py` | ✅ Production Ready | With/without skill comparison |
 | `run_task_eval.py` | ⚠️ Deprecated | Only used by comparison tests |
 | `collect_results.py` | ⚠️ Deprecated | Only used by comparison tests |
@@ -225,30 +196,22 @@ python3 skill-creator/scripts/run_comparison.py \
 
 | Test Suite | Tests | Passed | Failed | Success Rate |
 |------------|-------|--------|--------|--------------|
-| Static Analysis | 5 | 5 | 0 | 100% |
-| Trigger Tests | 29 | 29 | 0 | 100% |
+| Trigger Tests | 16 | Ready to run | - | - |
 | Comparison Tests | 3 | Ready to run | - | - |
-| **Total** | **37** | **34** | **0** | **100%** (pending: 3) |
+| **Total** | **19** | **0** | **0** | **Pending** |
 
 **Trigger Test Breakdown:**
-- Explicit Commands: 4/4 (100%)
-- Direct Matches: 6/6 (100%)
-- Related Terms: 4/4 (100%)
-- Vague Requests: 3/3 (100%)
-- Component-Specific: 2/2 (100%)
-- Negative Cases: 10/10 (100%)
-
-**Static Analysis Scores:**
-- Quick Validation: 100%
-- Static Analysis: 100%
-- Trigger Readiness: 100%
-- Eval Definitions: 100%
-- File Structure: 100%
+- Explicit Commands: 2 tests
+- Direct Matches: 3 tests
+- Related Terms: 2 tests
+- Vague Requests: 2 tests
+- Component-Specific: 2 tests
+- Negative Cases: 5 tests
 
 **Comparison Tests (Ready to Run):**
-- Group 1: SaaS Dashboard - WITH skill vs WITHOUT skill
-- Group 2: Fitness App - WITH skill vs WITHOUT skill
-- Group 3: E-commerce - WITH skill vs WITHOUT skill
+- saas-dashboard-nextjs-shadcn: WITH skill vs WITHOUT skill
+- fitness-app-react-styled-components: WITH skill vs WITHOUT skill
+- ecommerce-vue-tailwind-luxury: WITH skill vs WITHOUT skill
 
 **Success Criteria for Comparison Tests:**
 - Win rate: > 67% (2/3 evals)
@@ -262,14 +225,6 @@ python3 skill-creator/scripts/run_comparison.py \
 ```
 skill-creator/
 ├── scripts/
-│   # Static Tests (no subagents)
-│   ├── quick_validate.py        # Syntax validation
-│   ├── static_analysis.py       # Quality analysis
-│   ├── trigger_readiness.py     # Trigger optimization
-│   ├── review_evals.py          # Eval definitions
-│   ├── check_structure.py       # File structure
-│   ├── static_test_suite.py     # Run all static tests
-│   │
 │   # Comparison Tests (with subagents)
 │   ├── run_comparison.py        # With/without skill comparison
 │   │
@@ -286,58 +241,31 @@ skill-creator/
 ├── Documentation
 │ ├── SKILL.md                   # Skill creator skill
 │ ├── QWEN-COMPATIBLE.md         # Qwen compatibility guide
-│ ├── FAST-TESTING.md            # Quick testing (3-5 min)
-│ ├── NO-SUBAGENT-TESTS.md       # Static testing guide
 │ ├── PARALLEL-EXECUTION.md      # Parallel subagent guide
-│ ├── QUICK-TRIGGER-TEST.md      # Trigger test templates
-│ ├── TRIGGERING-TEST.md         # Complete trigger guide
 │ └── TESTING-WORKFLOW.md        # This file
 │
 └── evals/
-    ├── evals.json               # Original eval definitions
-    ├── eval_group1.json         # SaaS Dashboard
-    ├── eval_group2.json         # Fitness App
-    ├── eval_group3.json         # E-commerce
-    └── trigger_tests_group[1-5].json  # Trigger test cases
+    ├── evals.json               # All 3 prompt evals (consolidated)
+    └── trigger_tests.json       # All 16 trigger tests (consolidated)
 ```
 
 ---
 
 ## Quick Reference
 
-### Run Static Tests
+### Run Trigger Tests
 ```bash
-python3 skill-creator/scripts/static_test_suite.py design-system
-```
-
-### Run Individual Static Tests
-```bash
-python3 skill-creator/scripts/quick_validate.py design-system
-python3 skill-creator/scripts/static_analysis.py design-system
-python3 skill-creator/scripts/trigger_readiness.py design-system
-python3 skill-creator/scripts/review_evals.py design-system
-python3 skill-creator/scripts/check_structure.py design-system
+# Spawn Task subagents for each of the 16 trigger tests
+# See design-system/evals/trigger_tests.json for all test cases
 ```
 
 ### Run Comparison Tests (REQUIRED)
 ```bash
-# Group 1: SaaS Dashboard Comparison
+# Run comparison for all 3 evals in a single batch
 python3 skill-creator/scripts/run_comparison.py \
-  --eval-set design-system/evals/eval_group1.json \
+  --eval-set design-system/evals/evals.json \
   --skill-path design-system \
-  --output-dir design-system/eval-outputs/comparison-group1
-
-# Group 2: Fitness App Comparison
-python3 skill-creator/scripts/run_comparison.py \
-  --eval-set design-system/evals/eval_group2.json \
-  --skill-path design-system \
-  --output-dir design-system/eval-outputs/comparison-group2
-
-# Group 3: E-commerce Comparison
-python3 skill-creator/scripts/run_comparison.py \
-  --eval-set design-system/evals/eval_group3.json \
-  --skill-path design-system \
-  --output-dir design-system/eval-outputs/comparison-group3
+  --output-dir design-system/eval-outputs/comparison
 ```
 
 **What Happens:**
@@ -348,20 +276,12 @@ python3 skill-creator/scripts/run_comparison.py \
 
 ### Clean Up Output Files (After Reviewing Results)
 ```bash
-# Clean up comparison output directories
+# Clean up comparison output directory
 python3 skill-creator/scripts/run_comparison.py \
-  --output-dir design-system/eval-outputs/comparison-group1 --cleanup
+  --output-dir design-system/eval-outputs/comparison --cleanup
 ```
 
 **Note:** Always clean up after reviewing results to keep the workspace clean.
-
----
-
-### Run Trigger Tests
-```bash
-# Spawn Task subagents for each test in group
-# See design-system/evals/trigger_tests_groupN.json
-```
 
 ---
 

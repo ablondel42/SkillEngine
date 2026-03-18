@@ -44,6 +44,213 @@ def split_eval_set(eval_set: list[dict], holdout: float, seed: int = 42) -> tupl
     return train_set, test_set
 
 
+def calculate_metrics(results: list[dict]) -> dict:
+    """Calculate precision, recall, and accuracy from evaluation results.
+
+    Args:
+        results: List of evaluation result dictionaries.
+
+    Returns:
+        Dictionary containing precision, recall, accuracy, and confusion matrix values.
+    """
+    pos = [r for r in results if r["should_trigger"]]
+    neg = [r for r in results if not r["should_trigger"]]
+    tp = sum(r["triggers"] for r in pos)
+    pos_runs = sum(r["runs"] for r in pos)
+    fn = pos_runs - tp
+    fp = sum(r["triggers"] for r in neg)
+    neg_runs = sum(r["runs"] for r in neg)
+    tn = neg_runs - fp
+    total = tp + tn + fp + fn
+
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 1.0
+    accuracy = (tp + tn) / total if total > 0 else 0.0
+
+    return {
+        "tp": tp,
+        "tn": tn,
+        "fp": fp,
+        "fn": fn,
+        "total": total,
+        "precision": precision,
+        "recall": recall,
+        "accuracy": accuracy,
+    }
+
+
+def find_best_iteration(
+    history: list[dict],
+    has_test_set: bool,
+) -> tuple[dict, str]:
+    """Find the best iteration based on test or train score.
+
+    Args:
+        history: List of iteration history dictionaries.
+        has_test_set: Whether a test set was used.
+
+    Returns:
+        Tuple of (best_iteration_dict, best_score_string).
+    """
+    if has_test_set:
+        best = max(history, key=lambda h: h["test_passed"] or 0)
+        best_score = f"{best['test_passed']}/{best['test_total']}"
+    else:
+        best = max(history, key=lambda h: h["train_passed"])
+        best_score = f"{best['train_passed']}/{best['train_total']}"
+
+    return best, best_score
+
+
+def print_evaluation_stats(
+    label: str,
+    results: list[dict],
+    elapsed: float,
+    verbose: bool = True,
+) -> None:
+    """Print evaluation statistics including metrics and per-query results.
+
+    Args:
+        label: Label for the evaluation set (e.g., "Train", "Test").
+        results: List of evaluation result dictionaries.
+        elapsed: Time elapsed for the evaluation.
+        verbose: Whether to print per-query details.
+    """
+    metrics = calculate_metrics(results)
+    print(
+        f"{label}: {metrics['tp']+metrics['tn']}/{metrics['total']} correct, "
+        f"precision={metrics['precision']:.0%} recall={metrics['recall']:.0%} "
+        f"accuracy={metrics['accuracy']:.0%} ({elapsed:.1f}s)",
+        file=sys.stderr if verbose else sys.stdout,
+    )
+
+    if verbose:
+        for r in results:
+            status = "PASS" if r["pass"] else "FAIL"
+            rate_str = f"{r['triggers']}/{r['runs']}"
+            print(
+                f"  [{status}] rate={rate_str} expected={r['should_trigger']}: "
+                f"{r['query'][:60]}",
+                file=sys.stderr,
+            )
+
+
+def process_train_results(
+    all_results: list[dict],
+    train_set: list[dict],
+) -> dict:
+    """Extract and process results for the training set.
+
+    Args:
+        all_results: Combined results from running evaluation.
+        train_set: The training set queries.
+
+    Returns:
+        Dictionary containing train results and summary statistics.
+    """
+    train_queries_set = {q["query"] for q in train_set}
+    train_result_list = [r for r in all_results if r["query"] in train_queries_set]
+
+    train_passed = sum(1 for r in train_result_list if r["pass"])
+    train_total = len(train_result_list)
+    train_summary = {"passed": train_passed, "failed": train_total - train_passed, "total": train_total}
+
+    return {"results": train_result_list, "summary": train_summary}
+
+
+def process_test_results(
+    all_results: list[dict],
+    train_set: list[dict],
+    test_set: list[dict],
+) -> dict | None:
+    """Extract and process results for the test set.
+
+    Args:
+        all_results: Combined results from running evaluation.
+        train_set: The training set queries (to exclude).
+        test_set: The test set queries.
+
+    Returns:
+        Dictionary containing test results and summary statistics, or None if no test set.
+    """
+    if not test_set:
+        return None
+
+    train_queries_set = {q["query"] for q in train_set}
+    test_result_list = [r for r in all_results if r["query"] not in train_queries_set]
+
+    test_passed = sum(1 for r in test_result_list if r["pass"])
+    test_total = len(test_result_list)
+    test_summary = {"passed": test_passed, "failed": test_total - test_passed, "total": test_total}
+
+    return {"results": test_result_list, "summary": test_summary}
+
+
+def _blind_history(history: list[dict]) -> list[dict]:
+    """Strip test scores from history for improvement model.
+
+    Args:
+        history: List of iteration history dictionaries.
+
+    Returns:
+        History with test_* keys removed.
+    """
+    return [
+        {k: v for k, v in h.items() if not k.startswith("test_")}
+        for h in history
+    ]
+
+
+def update_skill_description(
+    skill_name: str,
+    skill_content: str,
+    current_description: str,
+    train_results: dict,
+    history: list[dict],
+    model: str,
+    log_dir: Path | None,
+    iteration: int,
+    verbose: bool,
+) -> str:
+    """Improve the skill description based on training results.
+
+    Args:
+        skill_name: Name of the skill.
+        skill_content: Content of the skill file.
+        current_description: Current skill description.
+        train_results: Results from the training set evaluation.
+        history: History of previous iterations.
+        model: Model to use for improvement.
+        log_dir: Optional directory for log files.
+        iteration: Current iteration number.
+        verbose: Whether to print progress.
+
+    Returns:
+        The new improved description.
+    """
+    if verbose:
+        print(f"\nImproving description...", file=sys.stderr)
+
+    t0 = time.time()
+    blinded_history = _blind_history(history)
+    new_description = improve_description(
+        skill_name=skill_name,
+        skill_content=skill_content,
+        current_description=current_description,
+        eval_results=train_results,
+        history=blinded_history,
+        model=model,
+        log_dir=log_dir,
+        iteration=iteration,
+    )
+    improve_elapsed = time.time() - t0
+
+    if verbose:
+        print(f"Proposed ({improve_elapsed:.1f}s): {new_description}", file=sys.stderr)
+
+    return new_description
+
+
 def run_loop(
     eval_set: list[dict],
     skill_path: Path,
@@ -59,7 +266,26 @@ def run_loop(
     live_report_path: Path | None = None,
     log_dir: Path | None = None,
 ) -> dict:
-    """Run the eval + improvement loop."""
+    """Run the eval + improvement loop.
+
+    Args:
+        eval_set: List of evaluation queries.
+        skill_path: Path to the skill directory.
+        description_override: Optional override for the skill description.
+        num_workers: Number of parallel workers.
+        timeout: Timeout per query in seconds.
+        max_iterations: Maximum number of improvement iterations.
+        runs_per_query: Number of runs per query.
+        trigger_threshold: Trigger rate threshold.
+        holdout: Fraction of eval set to hold out for testing.
+        model: Model to use for improvement.
+        verbose: Whether to print progress.
+        live_report_path: Optional path for live HTML report.
+        log_dir: Optional directory for log files.
+
+    Returns:
+        Dictionary containing the optimization results.
+    """
     project_root = find_project_root()
     name, original_description, content = parse_skill_md(skill_path)
     current_description = description_override or original_description
@@ -100,23 +326,11 @@ def run_loop(
         eval_elapsed = time.time() - t0
 
         # Split results back into train/test by matching queries
-        train_queries_set = {q["query"] for q in train_set}
-        train_result_list = [r for r in all_results["results"] if r["query"] in train_queries_set]
-        test_result_list = [r for r in all_results["results"] if r["query"] not in train_queries_set]
+        train_results = process_train_results(all_results["results"], train_set)
+        test_results = process_test_results(all_results["results"], train_set, test_set)
 
-        train_passed = sum(1 for r in train_result_list if r["pass"])
-        train_total = len(train_result_list)
-        train_summary = {"passed": train_passed, "failed": train_total - train_passed, "total": train_total}
-        train_results = {"results": train_result_list, "summary": train_summary}
-
-        if test_set:
-            test_passed = sum(1 for r in test_result_list if r["pass"])
-            test_total = len(test_result_list)
-            test_summary = {"passed": test_passed, "failed": test_total - test_passed, "total": test_total}
-            test_results = {"results": test_result_list, "summary": test_summary}
-        else:
-            test_results = None
-            test_summary = None
+        train_summary = train_results["summary"]
+        test_summary = test_results["summary"] if test_results else None
 
         history.append({
             "iteration": iteration,
@@ -151,28 +365,9 @@ def run_loop(
             live_report_path.write_text(generate_html(partial_output, auto_refresh=True, skill_name=name))
 
         if verbose:
-            def print_eval_stats(label, results, elapsed):
-                pos = [r for r in results if r["should_trigger"]]
-                neg = [r for r in results if not r["should_trigger"]]
-                tp = sum(r["triggers"] for r in pos)
-                pos_runs = sum(r["runs"] for r in pos)
-                fn = pos_runs - tp
-                fp = sum(r["triggers"] for r in neg)
-                neg_runs = sum(r["runs"] for r in neg)
-                tn = neg_runs - fp
-                total = tp + tn + fp + fn
-                precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
-                recall = tp / (tp + fn) if (tp + fn) > 0 else 1.0
-                accuracy = (tp + tn) / total if total > 0 else 0.0
-                print(f"{label}: {tp+tn}/{total} correct, precision={precision:.0%} recall={recall:.0%} accuracy={accuracy:.0%} ({elapsed:.1f}s)", file=sys.stderr)
-                for r in results:
-                    status = "PASS" if r["pass"] else "FAIL"
-                    rate_str = f"{r['triggers']}/{r['runs']}"
-                    print(f"  [{status}] rate={rate_str} expected={r['should_trigger']}: {r['query'][:60]}", file=sys.stderr)
-
-            print_eval_stats("Train", train_results["results"], eval_elapsed)
+            print_evaluation_stats("Train", train_results["results"], eval_elapsed)
             if test_summary:
-                print_eval_stats("Test ", test_results["results"], 0)
+                print_evaluation_stats("Test ", test_results["results"], 0)
 
         if train_summary["failed"] == 0:
             exit_reason = f"all_passed (iteration {iteration})"
@@ -187,39 +382,20 @@ def run_loop(
             break
 
         # Improve the description based on train results
-        if verbose:
-            print(f"\nImproving description...", file=sys.stderr)
-
-        t0 = time.time()
-        # Strip test scores from history so improvement model can't see them
-        blinded_history = [
-            {k: v for k, v in h.items() if not k.startswith("test_")}
-            for h in history
-        ]
-        new_description = improve_description(
+        current_description = update_skill_description(
             skill_name=name,
             skill_content=content,
             current_description=current_description,
-            eval_results=train_results,
-            history=blinded_history,
+            train_results=train_results,
+            history=history,
             model=model,
             log_dir=log_dir,
             iteration=iteration,
+            verbose=verbose,
         )
-        improve_elapsed = time.time() - t0
-
-        if verbose:
-            print(f"Proposed ({improve_elapsed:.1f}s): {new_description}", file=sys.stderr)
-
-        current_description = new_description
 
     # Find the best iteration by TEST score (or train if no test set)
-    if test_set:
-        best = max(history, key=lambda h: h["test_passed"] or 0)
-        best_score = f"{best['test_passed']}/{best['test_total']}"
-    else:
-        best = max(history, key=lambda h: h["train_passed"])
-        best_score = f"{best['train_passed']}/{best['train_total']}"
+    best, best_score = find_best_iteration(history, bool(test_set))
 
     if verbose:
         print(f"\nExit reason: {exit_reason}", file=sys.stderr)

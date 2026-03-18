@@ -93,7 +93,7 @@ python3 skill-creator/scripts/check_structure.py design-system
 
 **Checks:**
 - Required directories exist (evals/, references/)
-- Required files exist (SKILL.md, evals/evals.json)
+- Required files exist (SKILL.md, evals/*.json)
 - Optional directories present (scripts/, assets/)
 - File naming conventions
 - No orphaned files
@@ -133,7 +133,7 @@ TEST 3: Eval Definition Review
 TEST 4: File Structure Check
 ✅ PASS - Structure is correct
   - SKILL.md ✅
-  - evals/evals.json ✅
+  - evals/eval_group*.json ✅ (3 eval groups)
   - references/ (9 files) ✅
   - scripts/ (2 files) ✅
 

@@ -48,7 +48,7 @@ Expected:
 Task: "Using the design-system skill, create a component library"
 
 Expected per SKILL.md:
-1. Interview questions (7 required) OR skip with justification
+1. Interview questions (5 required) OR skip with justification
 2. Design tokens (colors 50-900, typography, spacing, etc.)
 3. Core components
 4. Domain components

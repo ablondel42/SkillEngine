@@ -279,7 +279,7 @@ Create comprehensive documentation:
 
 **Interview First (NON-NEGOTIABLE):**
 - ALWAYS complete the full interview before writing any code
-- Ask ALL 7 required questions every single time
+- Ask ALL 5 required questions every single time
 - If the user wants to skip the interview, politely insist it is essential
 - No design tokens, no components, no code until you have complete answers
 
@@ -313,7 +313,7 @@ Create comprehensive documentation:
 
 Before considering the task complete, ensure you've delivered:
 
-- [ ] **Interview completed**: All 7 required questions answered by the user
+- [ ] **Interview completed**: All 5 required questions answered by the user
 - [ ] **Granular tokens**: Full color palettes (50-900), typography scale, spacing scale, borders, shadows, motion
 - [ ] **Core components**: Actions, Inputs, Layout, Cards, Navigation, Typography, Feedback, Data
 - [ ] **Domain-specific components**: Components tailored to the app's use cases

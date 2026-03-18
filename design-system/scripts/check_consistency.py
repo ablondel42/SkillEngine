@@ -13,11 +13,7 @@ import re
 import sys
 from pathlib import Path
 
-
-def load_tokens(tokens_file: Path) -> dict:
-    """Load design system tokens from JSON file."""
-    with open(tokens_file) as f:
-        return json.load(f)
+from tokens import load_tokens
 
 
 def extract_css_variables(css_content: str) -> dict:

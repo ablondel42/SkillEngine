@@ -79,11 +79,48 @@ def main():
     ]
     
     # Subagent tests (only if not --static-only)
-    # These would spawn subagents for actual execution testing
-    # Placeholder for future implementation
     if not static_only:
-        print("\n⚠️  Subagent tests not yet implemented")
-        print("   Run static_test_suite.py for static-only tests")
+        print("\n" + "="*60)
+        print("SUBAGENT EXECUTION TESTS")
+        print("="*60)
+
+        # Import subagent test functions
+        from run_trigger_tests import (
+            load_trigger_tests,
+            run_trigger_test,
+            TriggerTestReport,
+            generate_report
+        )
+        from datetime import datetime
+
+        # Load and run trigger tests
+        test_cases = load_trigger_tests(skill_path)
+        print(f"\nLoaded {len(test_cases)} trigger test cases")
+
+        # Run trigger tests with subagent spawning
+        trigger_report = TriggerTestReport(
+            skill_name=skill_path.name,
+            skill_path=str(skill_path),
+            test_date=datetime.now().isoformat()
+        )
+
+        for test_case in test_cases:
+            print(f"\nRunning: {test_case['name']}")
+            result = run_trigger_test(test_case, skill_path.name)
+            trigger_report.results.append(result)
+            trigger_report.total_tests += 1
+            trigger_report.total_execution_time += result.execution_time
+
+            if result.pass_fail:
+                trigger_report.passed_tests += 1
+            else:
+                trigger_report.failed_tests += 1
+
+        # Add trigger test results to main test suite
+        tests.append((
+            "TEST 6: Subagent Trigger Tests (execution)",
+            ["python3", script_dir / "run_trigger_tests.py", skill_path, "--skill-name", skill_path.name]
+        ))
     
     results = []
     times = []
@@ -119,8 +156,15 @@ def main():
     
     print("="*60)
     print(f"\nTotal time: {total_time:.2f} seconds")
-    print(f"Subagents used: {'0 (static-only)' if static_only else 'See individual tests'}")
-    print(f"API calls: 0")
+    
+    if static_only:
+        print(f"Subagents used: 0 (static-only mode)")
+        print(f"API calls: 0")
+    else:
+        print(f"Subagents used: {trigger_report.total_tests}")
+        print(f"Trigger success rate: {trigger_report.trigger_success_rate}%")
+        print(f"Workflow compliance: {trigger_report.workflow_compliance_rate}%")
+        print(f"API calls: {trigger_report.total_tests} (one per trigger test)")
     
     # Cleanup test artifacts
     print("\n" + "-"*60)
@@ -140,13 +184,16 @@ def main():
             cleaned += 1
             print(f"✅ Removed: {artifact.name}")
     
-    # Remove empty test output directories
+    # Remove empty test output directories (except trigger-tests when subagents ran)
     test_dirs = [
-        skill_path / "eval-outputs",
-        skill_path / "fast-test-outputs",
-        skill_path / "parallel-test-outputs",
+        skill_path / "eval-outputs" / "fast-test-outputs",
+        skill_path / "eval-outputs" / "parallel-test-outputs",
     ]
-    
+
+    # Only clean eval-outputs if static-only mode
+    if static_only:
+        test_dirs.append(skill_path / "eval-outputs")
+
     for test_dir in test_dirs:
         if test_dir.exists() and test_dir.is_dir():
             import shutil

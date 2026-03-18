@@ -37,7 +37,7 @@ I want to build a design system for my React app.
 **Expected Behavior:**
 - [ ] Skill tool invoked (check tool call history)
 - [ ] SKILL.md read (check file access)
-- [ ] Interview questions asked (7 questions per design-system SKILL.md)
+- [ ] Interview questions asked (5 questions per design-system SKILL.md)
 - [ ] No code generated before interview complete
 
 **Pass Criteria:** All 4 checkboxes checked

@@ -1,0 +1,120 @@
+{
+  "skill_name": "design-system",
+  "test_date": "2026-03-18",
+  "test_type": "curated",
+  "description": "Essential trigger tests covering key patterns without redundancy",
+  "tests": [
+    {
+      "id": 1,
+      "query": "/design-system I need a design system for my React app",
+      "should_trigger": true,
+      "category": "explicit_command",
+      "rationale": "Slash command syntax with skill name"
+    },
+    {
+      "id": 2,
+      "query": "skill: design-system I need a UI kit",
+      "should_trigger": true,
+      "category": "explicit_command",
+      "rationale": "Colon syntax variant"
+    },
+    {
+      "id": 3,
+      "query": "I need a design system for my React app",
+      "should_trigger": true,
+      "category": "direct_match",
+      "rationale": "Direct 'design system' keyword match"
+    },
+    {
+      "id": 4,
+      "query": "Create a component library with consistent styling for my dashboard",
+      "should_trigger": true,
+      "category": "direct_match",
+      "rationale": "'Component library' synonym"
+    },
+    {
+      "id": 5,
+      "query": "I need a UI kit with consistent components for my e-commerce site",
+      "should_trigger": true,
+      "category": "direct_match",
+      "rationale": "'UI kit' synonym"
+    },
+    {
+      "id": 6,
+      "query": "I need to define design tokens for colors and typography",
+      "should_trigger": true,
+      "category": "related_terms",
+      "rationale": "Specific design system terminology"
+    },
+    {
+      "id": 7,
+      "query": "Create reusable UI building blocks for my team",
+      "should_trigger": true,
+      "category": "related_terms",
+      "rationale": "Creative phrasing for components"
+    },
+    {
+      "id": 8,
+      "query": "Make my app look more professional and consistent",
+      "should_trigger": true,
+      "category": "vague_request",
+      "rationale": "Vague but implies design need"
+    },
+    {
+      "id": 9,
+      "query": "Set up the UI for my new SaaS dashboard",
+      "should_trigger": true,
+      "category": "vague_request",
+      "rationale": "Vague with domain context"
+    },
+    {
+      "id": 10,
+      "query": "I need buttons, cards, and inputs for my application",
+      "should_trigger": true,
+      "category": "component_specific",
+      "rationale": "Specific component request"
+    },
+    {
+      "id": 11,
+      "query": "Create accessible form components with proper ARIA",
+      "should_trigger": true,
+      "category": "component_specific",
+      "rationale": "Component request with accessibility focus"
+    },
+    {
+      "id": 12,
+      "query": "Convert this PDF file to text format",
+      "should_trigger": false,
+      "category": "negative_unrelated",
+      "rationale": "File operation - unrelated to design"
+    },
+    {
+      "id": 13,
+      "query": "Write a Python script to scrape websites",
+      "should_trigger": false,
+      "category": "negative_unrelated",
+      "rationale": "Backend scripting - unrelated"
+    },
+    {
+      "id": 14,
+      "query": "Help me debug this SQL query",
+      "should_trigger": false,
+      "category": "negative_unrelated",
+      "rationale": "Database work - unrelated"
+    },
+    {
+      "id": 15,
+      "query": "Set up a Docker container for my app",
+      "should_trigger": false,
+      "category": "negative_unrelated",
+      "rationale": "Infrastructure/DevOps - unrelated"
+    },
+    {
+      "id": 16,
+      "query": "Create a machine learning model for classification",
+      "should_trigger": false,
+      "category": "negative_unrelated",
+      "rationale": "ML/AI work - unrelated"
+    }
+  ]
+}

@@ -170,11 +170,11 @@ def main():
     print(f"   a) WITH skill: 'Execute using the {manifest['skill_name']} skill...'")
     print(f"   b) WITHOUT skill: 'Execute this task WITHOUT using any skills...'")
     print(f"3. After both complete, spawn comparator subagent")
-    print(f"4. Run collect_results.py after all comparisons complete")
+    print(f"4. Review results in eval-outputs directory")
     print(f"\n{'='*60}\n")
-    
+
     print(json.dumps(manifest, indent=2))
-    
+
     return 0
 
 

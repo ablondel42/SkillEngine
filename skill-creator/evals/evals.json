@@ -1,0 +1,126 @@
+{
+  "skill_name": "skill-creator",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "create-new-skill-from-scratch",
+      "prompt": "I want to create a new skill for generating API documentation from OpenAPI specs. The skill should read OpenAPI YAML files and produce comprehensive documentation with examples. Can you help me build this skill?",
+      "expected_output": "Agent should follow the skill-creator workflow: 1) Interview to understand requirements (target audience, output format, frameworks), 2) Create SKILL.md with clear workflow and instructions, 3) Create evals/evals.json with test cases, 4) Create reference documentation if needed, 5) Set up proper file structure.",
+      "expectations": [
+        "Interview questions asked to gather requirements",
+        "SKILL.md created with clear workflow steps",
+        "SKILL.md includes trigger description in frontmatter",
+        "evals/evals.json created with at least 2 test cases",
+        "File structure follows skill-creator conventions",
+        "Reference documentation created if complexity warrants it"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "improve-existing-skill",
+      "prompt": "I have an existing design-system skill but it's not triggering reliably. Can you help me improve the skill description and test it?",
+      "expected_output": "Agent should: 1) Read existing SKILL.md, 2) Analyze trigger description, 3) Suggest improvements to skill description for better triggering, 4) Create or update evals for testing, 5) Run comparison tests to verify improvements.",
+      "expectations": [
+        "Existing SKILL.md read and analyzed",
+        "Trigger description identified and reviewed",
+        "Specific improvements suggested for trigger optimization",
+        "Test cases created or updated in evals/evals.json",
+        "Comparison test workflow explained or executed"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "setup-testing-infrastructure",
+      "prompt": "I just created a new skill for PDF processing. How do I set up testing for it? I want to make sure it works correctly before deploying.",
+      "expected_output": "Agent should explain the testing workflow: 1) Create evals/evals.json with test cases, 2) Run static tests (quick_validate.py, static_analysis.py, trigger_readiness.py), 3) Run comparison tests using run_comparison.py, 4) Review results using eval-viewer, 5) Iterate based on findings.",
+      "expectations": [
+        "evals/evals.json structure explained",
+        "Static test suite mentioned (no subagents required)",
+        "Comparison test workflow explained (with/without skill)",
+        "Scripts referenced correctly (run_comparison.py, static_test_suite.py)",
+        "Eval viewer mentioned for reviewing results",
+        "File paths and commands are accurate"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "optimize-skill-description-for-triggering",
+      "prompt": "My skill-creator skill is complete but I want to optimize its description so it triggers more reliably. Can you help me improve the trigger accuracy?",
+      "expected_output": "Agent should: 1) Read current SKILL.md description, 2) Generate 20 trigger eval queries (mix of should-trigger and should-not-trigger), 3) Present eval set for user review using HTML template, 4) Export eval set as JSON, 5) Explain trigger optimization based on Cycle 5 research.",
+      "expectations": [
+        "Current skill description analyzed",
+        "20 trigger eval queries generated (8-10 should-trigger, 8-10 should-not-trigger)",
+        "Eval queries are realistic with personal context and detail",
+        "Should-not-trigger queries are near-misses (not obviously irrelevant)",
+        "HTML eval review template used with correct placeholders",
+        "Eval set exported as JSON to Downloads folder"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "eval_name": "run-comparison-benchmark",
+      "prompt": "I've improved my skill and want to compare the new version against the old one. How do I run a proper benchmark comparison?",
+      "expected_output": "Agent should: 1) Explain comparison test setup (with-skill vs baseline), 2) Spawn subagents for each test case (with-skill and baseline in same turn), 3) Capture timing data from task notifications, 4) Draft quantitative assertions while runs complete, 5) Grade runs and aggregate into benchmark, 6) Launch eval viewer for user review.",
+      "expectations": [
+        "Comparison test workflow explained clearly",
+        "With-skill and baseline runs spawned in same turn",
+        "Proper directory structure created (iteration-N/eval-ID/)",
+        "Timing data captured to timing.json",
+        "Quantitative assertions drafted with descriptive names",
+        "Benchmark aggregated using aggregate_benchmark.py script",
+        "Eval viewer launched with generate_review.py"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "eval_name": "create-quantitative-evals",
+      "prompt": "I need to add quantitative evals to my skill. How do I write good assertions that can be automatically verified?",
+      "expected_output": "Agent should: 1) Explain assertion structure (id, name, type, expected), 2) Show examples of good vs bad assertions, 3) Help draft 3-5 assertions per eval case, 4) Explain assertion types (contains, equals, regex, file-exists), 5) Write grading script for programmatic assertions.",
+      "expectations": [
+        "Assertion schema explained (id, name, type, expected)",
+        "Good vs bad assertion examples provided",
+        "3-5 assertions drafted per eval case",
+        "Assertions use objective verifiable criteria",
+        "Grading script created for programmatic checks",
+        "evals/evals.json updated with assertions array"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "eval_name": "debug-skill-not-triggering",
+      "prompt": "My skill exists but Claude isn't using it. The description says 'Build dashboards' but when I ask for a dashboard, it doesn't trigger. Help me debug this.",
+      "expected_output": "Agent should: 1) Check skill registration (ls ~/.qwen/skills/), 2) Analyze description for trigger keywords, 3) Identify missing trigger patterns based on Cycle 5 research, 4) Rewrite description with 'I need a...' pattern matching, 5) Add domain keywords and example trigger phrases, 6) Test with explicit need statement.",
+      "expectations": [
+        "Skill registration verified",
+        "Current description analyzed for trigger gaps",
+        "Cycle 5 research applied (need statement pattern)",
+        "Description rewritten with trigger optimization",
+        "Domain keywords added (3+ required)",
+        "Example trigger phrases included",
+        "Test with 'I need a [domain] for my [context]' pattern"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "eval_name": "create-skill-with-scripts",
+      "prompt": "I want to create a skill that generates docx files. The skill should bundle a Python script for docx generation since all test cases need it. How do I structure this?",
+      "expected_output": "Agent should: 1) Identify repeated work pattern (docx generation), 2) Create scripts/create_docx.py with reusable logic, 3) Reference script from SKILL.md, 4) Set up proper file structure (scripts/, assets/), 5) Include script execution instructions in workflow.",
+      "expectations": [
+        "Repeated work pattern identified across test cases",
+        "scripts/create_docx.py created with reusable logic",
+        "SKILL.md references script with clear instructions",
+        "File structure includes scripts/ directory",
+        "Script includes error handling and edge cases",
+        "Workflow explains when and how to execute script"
+      ],
+      "files": []
+    }
+  ]
+}

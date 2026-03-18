@@ -7,15 +7,10 @@ CSS custom properties for use in stylesheets.
 """
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
-
-def load_tokens(tokens_file: Path) -> dict:
-    """Load design system tokens from JSON file."""
-    with open(tokens_file) as f:
-        return json.load(f)
+from tokens import load_tokens
 
 
 def generate_css_variables(tokens: dict) -> str:

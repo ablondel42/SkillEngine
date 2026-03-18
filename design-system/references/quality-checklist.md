@@ -6,7 +6,7 @@ Quick sanity check before delivering your design system.
 
 ## Before You Start
 
-- [ ] Asked all 7 interview questions
+- [ ] Asked all 5 interview questions
 - [ ] Understand the domain and can name 5-10 domain components
 - [ ] Tech stack is clear (framework, styling, libraries)
 - [ ] Know which screens to build as examples

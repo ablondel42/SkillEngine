@@ -124,7 +124,7 @@ The formula matches the skill's description:
 **All 12 tests showed:**
 - ✅ Skill tool invoked
 - ✅ SKILL.md read
-- ✅ Interview conducted (all 7 questions)
+- ✅ Interview conducted (all 5 questions)
 - ✅ No code before interview
 
 **100% workflow compliance rate**

@@ -11,8 +11,4 @@ Main Scripts:
 - trigger_readiness.py: Analyze trigger optimization
 - review_evals.py: Review eval definitions
 - check_structure.py: Check file structure
-
-Deprecated (used by comparison tests only):
-- run_task_eval.py: Prepare eval structure
-- collect_results.py: Aggregate results
 """
