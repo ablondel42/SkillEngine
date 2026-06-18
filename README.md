@@ -1,6 +1,6 @@
 # SkillEngine
 
-A hobby project for experimenting with AI agent skills and testing workflows.
+A hobby project for experimenting with AI agent skills and testing workflows. (Based on Anthropic skill builder)
 
 ---
 
