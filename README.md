@@ -1,6 +1,8 @@
 # SkillEngine
 
 A hobby project for experimenting with AI agent skills and testing workflows. (Based on Anthropic skill builder)
+Initially I was aiming to create a skill that pushes the agent to create and make use of a design system before
+coding, to avoid generating glue code and prefer using a coherent component base.
 
 ---
 
